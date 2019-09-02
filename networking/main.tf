@@ -48,34 +48,6 @@ resource "aws_subnet" "subprv" {
   }
 }
 
-resource "aws_security_group" "sg" {
-  name        = "sgpub"
-  description = "Used for access to the public instances"
-  vpc_id      = aws_vpc.vpc.id
-  dynamic "ingress" {
-    for_each = [ for s in var.service_ports: {
-      from_port = s.from_port
-      to_port = s.to_port
-    }]
-    content {
-      from_port   = ingress.value.from_port
-      to_port     = ingress.value.to_port
-      protocol    = "tcp"
-      cidr_blocks = [ingress.value.to_port == 27017 ? "0.1.2.3/32" : var.access_ip]
-    }
-  }
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  tags = { 
-    name = format("%s_sgpub", var.project_name)
-    project_name = var.project_name
-  }
-}
 # Public route table, allows all outgoing traffic to go the the internet gateway.
 # https://www.terraform.io/docs/providers/aws/r/route_table.html?source=post_page-----1a7fb9a336e9----------------------
 resource "aws_route_table" "rtpub" {
@@ -109,6 +81,63 @@ resource "aws_default_route_table" "rtprv" {
   default_route_table_id = "${aws_vpc.vpc.default_route_table_id}"
   tags = {
     name = format("%s_rtprv", var.project_name)
+    project_name = var.project_name
+  }
+}
+
+resource "aws_security_group" "sgbastion" {
+  name        = "sgbastion"
+  description = "Used for access to the public instances"
+  vpc_id      = aws_vpc.vpc.id
+  dynamic "ingress" {
+    for_each = [ for s in var.bastion_ports: {
+      from_port = s.from_port
+      to_port = s.to_port
+    }]
+    content {
+      from_port   = ingress.value.from_port
+      to_port     = ingress.value.to_port
+      protocol    = "tcp"
+      cidr_blocks = [ingress.value.to_port == 27017 ? "0.1.2.3/32" : var.access_ip]
+    }
+  }
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = { 
+    name = format("%s_sgbastion", var.project_name)
+    project_name = var.project_name
+  }
+}
+resource "aws_security_group" "sgdocdb" {
+  name        = "sgdocdb"
+  description = "Used to allow access into docdb"
+  vpc_id      = aws_vpc.vpc.id
+  dynamic "ingress" {
+    for_each = [ for s in var.docdb_ports: {
+      from_port = s.from_port
+      to_port = s.to_port
+    }]
+    content {
+      from_port   = ingress.value.from_port
+      to_port     = ingress.value.to_port
+      protocol    = "tcp"
+      cidr_blocks = [var.access_ip]
+    }
+  }
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = { 
+    name = format("%s_sgdocdb", var.project_name)
     project_name = var.project_name
   }
 }

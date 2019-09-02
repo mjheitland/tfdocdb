@@ -1,16 +1,27 @@
 #--- database/main.tf
 # https://www.terraform.io/docs/providers/aws/r/docdb_cluster.html
+resource "aws_docdb_subnet_group" "docdbsubnetgroup" {
+  name       = "docdbsubnetgroup"
+  subnet_ids = var.subprv_ids
+
+  tags = {
+    name = format("%s_docdb_subnet_group", var.project_name)
+    project_name = var.project_name
+  }
+}
+
 resource "aws_docdb_cluster" "docdb_cluster" {
   cluster_identifier      = "mh-docdb-cluster"
   apply_immediately       = true
+  db_subnet_group_name    = aws_docdb_subnet_group.docdbsubnetgroup.name
   engine                  = "docdb"
-  master_username         = "user1"
-  master_password         = "sjliib77"
+  master_username         = var.master_username
+  master_password         = var.master_password
   backup_retention_period = 5
   preferred_backup_window = "00:00-02:00"
   skip_final_snapshot     = true
   storage_encrypted       = true
-  #vpc_security_group_ids  = []
+  vpc_security_group_ids  = [var.sgdocdb_id]
   tags = { 
     name = format("%s_docdb_cluster", var.project_name)
     project_name = var.project_name

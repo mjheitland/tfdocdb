@@ -1,14 +1,20 @@
 This Terraform project shows how to specify and deploy the following components:
-+ VPC
++ 1 VPC
 + 1 internet gateway
-+ 1 public subnet   (number can be easily modified changing variables in terraform.tfvars)
-+ 2 private subnets (number can be easily modified changing variables in terraform.tfvars)
-+ 1 public security group
++ 1 public subnet for our bastion server
++ 3 private subnets for our docdb cluster (3 is the minimum that docdb accepts!)
 + 1 public route table (opening the ingress ports listed in terraform.tfvars)
++ 1 public route table association
 + 1 private default route table (will automatically be associated with all unattached subnets)
++ 1 security group for our bastion server (port 22)
++ 1 security group for our document db instances (port 27017)
+
 + 1 keypair (first you have to run ssh-keygen in your home folder)
-+ 1 ec2 micro instance per public subnet
-+ 1 documentdb cluster using the two private subnets
++ 1 ec2 micro instance for our bastion server
+
++ 1 docdb subnet group including the three private subnets 
++ 1 docdb cluster using the docdb subnet group
++ 3 docdb nodes (ec2 instances of type db.r5.large)
 
 ## in .zshrc
 
@@ -37,3 +43,14 @@ This Terraform project shows how to specify and deploy the following components:
 ## To delete Terraform state files
     rm -rfv **/.terraform # remove all recursive subdirectories
     
+## To test DocumentDB
+1.  cd /tmp
+2.  copy from console "documentdb" tab: 
+      mongo 
+        --ssl 
+        --host &lt; docdb cluster endpoint &gt;
+        --sslCAFile rds-combined-ca-bundle.pem
+        --username &lt; yourMasterUsername &gt;
+        --password &lt; yourMasterPassword &gt;
+3.  db.col.insert({hello:”Amazon DocumentDB”})
+4.  db.col.find()

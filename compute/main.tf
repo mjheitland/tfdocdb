@@ -20,17 +20,17 @@ data "template_file" "userdata" {
     ec2_index = count.index
   }
 }
-resource "aws_instance" "server" {
+resource "aws_instance" "bastion" {
   count = length(var.subpub_ids)
 
   instance_type           = var.instance_type
   ami                     = data.aws_ami.ami.id
   key_name                = aws_key_pair.keypair.id
   subnet_id               = element(var.subpub_ids, count.index)
-  vpc_security_group_ids  = [var.sg_id]
+  vpc_security_group_ids  = [var.sgbastion_id]
   user_data               = data.template_file.userdata.*.rendered[count.index]
   tags = { 
-    name = format("%s_server_%d", var.project_name, count.index)
+    name = format("%s_bastion_%d", var.project_name, count.index)
     project_name = var.project_name
   }
 }

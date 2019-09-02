@@ -19,8 +19,15 @@ variable "access_ip" {
   description = "cidr block for incoming traffic"
   type        = string
 }
-variable "service_ports" {
-  description = "ports that we open on our ec2 instance"
+variable "bastion_ports" {
+  description = "ingress ports"
+  type = list(object({
+    from_port = number
+    to_port   = number
+  }))
+}
+variable "docdb_ports" {
+  description = "ingress ports"
   type = list(object({
     from_port = number
     to_port   = number

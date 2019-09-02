@@ -3,6 +3,8 @@ variable "project_name" {
   description = "project name is used as resource tag"
   type        = string
 }
+
+#--- networking variables
 variable "vpc_cidr" {
   description = "separate vpc for this project"
   type        = string
@@ -19,15 +21,22 @@ variable "access_ip" {
   description = "cidr block for incoming traffic"
   type        = string
 }
-variable "service_ports" {
-  description = "ports that we open on our ec2 instance"
+variable "bastion_ports" {
+  description = "ingress ports"
+  type = list(object({
+    from_port = number
+    to_port   = number
+  }))
+}
+variable "docdb_ports" {
+  description = "ingress ports"
   type = list(object({
     from_port = number
     to_port   = number
   }))
 }
 
-#-------compute variables
+#--- compute variables
 variable "key_name" {
   description = "name of keypair to access ec2 instances"
   type        = string
@@ -38,5 +47,16 @@ variable "public_key_path" {
 }
 variable "instance_type" {
   description = "type of ec2 instance"
+  type        = string
+}
+
+#--- database variables
+variable "master_username" {
+  description = "user to access documentdb"
+  type        = string
+  default     = "user1"
+}
+variable "master_password" {
+  description = "password to access documentdb"
   type        = string
 }

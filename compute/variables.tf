@@ -19,7 +19,7 @@ variable "subpub_ids" {
   description = "ids of public subnets"
   type        = list(string)
 }
-variable "sg_id" {
-  description = "id of security group"
+variable "sgbastion_id" {
+  description = "id of bastion security group"
   type        = string
 }

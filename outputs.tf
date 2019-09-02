@@ -16,28 +16,37 @@ output "subpub_ids" {
 output "subprv_ids" {
   value = module.networking.subprv_ids
 }
-output "sg_id" {
-  value = module.networking.sg_id
-}
 output "rtpub_ids" {
   value = module.networking.rtpub_ids
 }
 output "rtprv_ids" {
   value = module.networking.rtprv_ids
 }
+output "sgbastion_id" {
+  value = module.networking.sgbastion_id
+}
+output "sgdocdb_id" {
+  value = module.networking.sgdocdb_id
+}
 
 #--- compute
 output "keypair_id" {
   value = module.compute.keypair_id
 }
-output "server_ids" {
-  value = module.compute.server_ids
+output "bastion_ids" {
+  value = module.compute.bastion_ids
 }
-output "server_public_ips" {
-  value = module.compute.server_public_ips
+output "bastion_public_ips" {
+  value = module.compute.bastion_public_ips
 }
 
 #--- database
+output "master_username" {
+  value   = var.master_username
+}
+output "master_password" {
+  value = var.master_password
+}
 output "docdb_cluster_id" {
   value = module.database.docdb_cluster_id
 }
