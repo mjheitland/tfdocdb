@@ -1,5 +1,5 @@
 #--- terraform.tfvars ---
-project_name = "tfmh"
+project_name = "tfdocdb"
 vpc_cidr     = "10.50.0.0/16"
 subpub_cidrs = [
   "10.50.101.0/24"
@@ -26,6 +26,6 @@ service_ports = [
 ]
 
 #--- compute
-key_name        = "tfmh_key"
+key_name        = "key"
 public_key_path = "~/.ssh/id_rsa.pub"
 instance_type   = "t2.micro"
