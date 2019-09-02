@@ -25,3 +25,11 @@ module "compute" {
   subpub_ids      = module.networking.subpub_ids
   sg_id           = module.networking.sg_id
 }
+
+
+# Deploy Database Resources
+module "database" {
+  source          = "./database"
+  
+  project_name    = var.project_name
+}

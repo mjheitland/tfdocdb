@@ -36,3 +36,11 @@ output "server_ids" {
 output "server_public_ips" {
   value = module.compute.server_public_ips
 }
+
+#--- database
+output "docdb_cluster_id" {
+  value = module.database.docdb_cluster_id
+}
+output "docdb_node_ids" {
+  value = module.database.docdb_node_ids
+}
