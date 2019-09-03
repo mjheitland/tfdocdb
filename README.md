@@ -44,13 +44,14 @@ This Terraform project shows how to specify and deploy the following components:
     rm -rfv **/.terraform # remove all recursive subdirectories
     
 ## To test DocumentDB
-1.  cd /tmp
-2.  copy from console "documentdb" tab: 
-      mongo 
-        --ssl 
-        --host &lt; docdb cluster endpoint &gt;
-        --sslCAFile rds-combined-ca-bundle.pem
-        --username &lt; yourMasterUsername &gt;
-        --password &lt; yourMasterPassword &gt;
-3.  db.col.insert({hello:”Amazon DocumentDB”})
-4.  db.col.find()
+1.  `cd /tmp`
+2.  copy from console "documentdb" tab:
+
+        mongo 
+          --ssl 
+          --host <docdb cluster endpoint>
+          --sslCAFile rds-combined-ca-bundle.pem
+          --username <yourMasterUsername>
+          --password <yourMasterPassword>
+3.  `db.col.insert({hello:”Amazon DocumentDB”})`
+4.  `db.col.find()`
